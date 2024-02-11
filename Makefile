@@ -4,6 +4,9 @@
 # Bestand: makefile
 # Inhoud : de configuratie staat in bestand Makefile en koppelt met dit bestand met 'include' 
 
+# Verwijder de "#" voor de zin hieronder om de EEPROM data te bewaren tijdens het programmen
+#KEEP_EEPROM = true
+
 # Folder voor gegenereerde make-bestanden 
  MAKEFOLDER = make-data/
 # Folder voor gedownloade hex files
@@ -115,7 +118,11 @@ _all1:
 	@mkdir -p $(MAKEFOLDER)
 
 # Doel: make flash
-flash: _start _flash1 _getEEPROM $(MAKEFOLDER)$(PROJECTNAME).hex _flash2 _uploadEEPROM _eind
+ifdef KEEP_EEPROM
+ flash: _start _flash1 _getEEPROM $(MAKEFOLDER)$(PROJECTNAME).hex _flash2 _uploadEEPROM _eind
+else
+ flash: _start _flash1 $(MAKEFOLDER)$(PROJECTNAME).hex _flash2 _eind
+endif
 
 _getEEPROM:
 	@echo "_________________________________"
