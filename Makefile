@@ -5,13 +5,12 @@
 # Inhoud : de configuratie staat in bestand Makefile en koppelt met dit bestand met 'include' 
 
 # Folder voor gegenereerde make-bestanden 
-MAKEFOLDER = make-data/
+ MAKEFOLDER = make-data/
 # De AVR microcontroller
- MICROCONTROLLER = attiny414
-# MICROCONTROLLER = atxmega256a3u
+ MICROCONTROLLER = atxmega256a3u
 # De AVR programmer (o.a. avrisp2)
- PROGRAMMER = snap_updi
- #PROGRAMMER = avrisp2
+ #PROGRAMMER = snap_updi
+ PROGRAMMER = avrisp2
 # Folder waar bin/ van de AVR toolchain staat (leeghouden indien door $Path o.a. avr-g++ vindbaar is)
 AVRFOLDER = 
 # Folder waar avrdude staat (leeghouden indien door $Path o.a. avrdude vindbaar is)
@@ -92,7 +91,18 @@ _all1:
 	@mkdir -p $(MAKEFOLDER)
 
 # Doel: make flash
-flash: _start _flash1 $(MAKEFOLDER)$(PROJECTNAME).hex _flash2 _eind
+flash: _start _flash1 _getEEPROM $(MAKEFOLDER)$(PROJECTNAME).hex _flash2 _uploadEEPROM _eind
+
+_getEEPROM:
+	@echo "_________________________________"
+	@echo " > download EEPROM data"
+	rm -f     $(MAKEFOLDER)eeprom.hex
+	$(TOOLDUDE) -U eeprom:r:$(MAKEFOLDER)eeprom.hex
+
+_uploadEEPROM:
+	@echo "_________________________________"
+	@echo " > upload EEPROM data"
+	$(TOOLDUDE) -U eeprom:w:$(MAKEFOLDER)eeprom.hex
 
 _flash1: 
 	@echo "  > Doel: Compileer, link de broncode en schrijf het gecompileerde hex-bestand naar het flash geheugen van de microcontroller."
