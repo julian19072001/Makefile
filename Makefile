@@ -1,5 +1,5 @@
 # Auteur : Julian
-# Versie : 2022420
+# Versie : 11-02-2024
 #
 # Bestand: makefile
 # Inhoud : de configuratie staat in bestand Makefile en koppelt met dit bestand met 'include' 
