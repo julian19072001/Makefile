@@ -28,6 +28,7 @@
  DUDEFOLDER = 
 # De (optionele) poort voor de AVR programmer (o.a. usb, /dev/tty.#)
 #PORT = usb
+
 # De fuse waardes: low, high, en extended
 # Zie http://www.engbedded.com/fusecalc/ voor andere microcontrollers en opties
 FUSELOW  = 
