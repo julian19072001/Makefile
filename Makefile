@@ -13,9 +13,15 @@
  HEXFOLDER = hex-files/
 # De AVR microcontroller
  MICROCONTROLLER = atxmega256a3u
-# De AVR programmer (o.a. avrisp2)
- #PROGRAMMER = snap_updi
- PROGRAMMER = avrisp2
+# De AVR programmer
+ #PROGRAMMER = snap_updi	# Programmer voor MPLAB-snap
+ PROGRAMMER = avrisp2	   	# Programmer voor HvA-xMega bordjes
+ #PROGRAMMER = atmelice_pdi	# Programmer voor Atmel-ICE
+
+# Folder voor gegenereerde make-bestanden 
+ MAKEFOLDER = make-data/
+# Folder voor gedownloade hex files
+ HEXFOLDER = hex-files/
 # Folder waar bin/ van de AVR toolchain staat (leeghouden indien door $Path o.a. avr-g++ vindbaar is)
  AVRFOLDER = 
 # Folder waar avrdude staat (leeghouden indien door $Path o.a. avrdude vindbaar is)
