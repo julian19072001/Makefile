@@ -6,15 +6,17 @@
 
 # Folder voor gegenereerde make-bestanden 
  MAKEFOLDER = make-data/
+# Folder voor gedownloade hex files
+ HEXFOLDER = hex-files/
 # De AVR microcontroller
  MICROCONTROLLER = atxmega256a3u
 # De AVR programmer (o.a. avrisp2)
  #PROGRAMMER = snap_updi
  PROGRAMMER = avrisp2
 # Folder waar bin/ van de AVR toolchain staat (leeghouden indien door $Path o.a. avr-g++ vindbaar is)
-AVRFOLDER = 
+ AVRFOLDER = 
 # Folder waar avrdude staat (leeghouden indien door $Path o.a. avrdude vindbaar is)
-DUDEFOLDER = 
+ DUDEFOLDER = 
 # De (optionele) poort voor de AVR programmer (o.a. usb, /dev/tty.#)
 #PORT = usb
 # De fuse waardes: low, high, en extended
@@ -61,7 +63,7 @@ help: _start _help1 _eind
 _start:
 	@echo
 	@echo "#################################"
-	@echo "  > Start: makefile.xmega.mk"
+	@echo "  > Start: makefile"
 
 _help1: 
 	@echo "_________________________________"
@@ -69,6 +71,9 @@ _help1:
 	@echo "    make        := Toon dit overzicht."
 	@echo "    make help   := Toon dit overzicht."
 	@echo "    make all    := Compileer en link de broncode."
+	@echo "    make download     := Download programma en eeprom data van microcontroller."
+	@echo "    make flash_hex    := Upload hex-file genaamd program.hex vanuit HEXFOLDER."
+	@echo "    make flash_eeprom := Upload hex-file genaamd eeprom.hex vanuit HEXFOLDER."
 	@echo "    make flash  := Compileer en link de broncode en schrijf het gecompileerde hex-bestand naar"
 	@echo "                   het flash geheugen van de microcontroller."
 	@echo "    make test   := Test de programmer verbinding (ISP) met de microcontroller."
@@ -81,6 +86,25 @@ _eind:
 	@echo "#################################"
 	@echo "  > Klaar"
 	@echo
+
+download:
+	@echo "_________________________________"
+	@echo "  > downloading hexfiles:"
+	@mkdir -p $(HEXFOLDER)
+	rm -f     $(HEXFOLDER)progam.hex
+	rm -f     $(HEXFOLDER)eeprom.hex
+	$(TOOLDUDE) -U flash:r:$(HEXFOLDER)progam.hex:i
+	$(TOOLDUDE) -U eeprom:r:$(HEXFOLDER)eeprom.hex:i
+
+flash_hex:
+	@echo "_________________________________"
+	@echo "  > uploading hexfile:"
+	$(TOOLDUDE) -e -U flash:w:$(HEXFOLDER)progam.hex
+
+flash_eeprom:
+	@echo "_________________________________"
+	@echo "  > uploading eeprom:"
+	$(TOOLDUDE) -U eeprom:w:$(HEXFOLDER)eeprom.hex
 
 # Doel: make all
 all: _start _all1 $(MAKEFOLDER)$(PROJECTNAME).hex _eind
@@ -97,7 +121,7 @@ _getEEPROM:
 	@echo "_________________________________"
 	@echo " > download EEPROM data"
 	rm -f     $(MAKEFOLDER)eeprom.hex
-	$(TOOLDUDE) -U eeprom:r:$(MAKEFOLDER)eeprom.hex
+	$(TOOLDUDE) -U eeprom:r:$(MAKEFOLDER)eeprom.hex:i
 
 _uploadEEPROM:
 	@echo "_________________________________"
